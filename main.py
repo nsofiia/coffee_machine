@@ -1,4 +1,3 @@
-import sys
 from data import MENU, code_words, resources
 
 def print_menu():
@@ -16,7 +15,7 @@ def coffee_machine():
     go = True
     while go:
         print_menu()
-        user_drink = input("What would you like? (espresso/latte/cappuccino):")
+        user_drink = input("What would you like? (espresso/latte/cappuccino):").lower()
         while not user_drink in code_words:
             user_drink = input("What would you like? (espresso/latte/cappuccino):")
 
@@ -41,19 +40,17 @@ def coffee_machine():
                 nickles = int(input("how many nickles?: ")) * 0.05
                 pennies = int(input("how many pennies?: ")) * 0.01
                 user_paid = quaters + dimes + nickles + pennies
-                resources["money"] +=user_paid
                 user_change = (user_paid) - choice["cost"]
-                resources["money"] -=user_change
-
                 if user_change < 0:
                     print("Not enough money inserted. Coins are refunded.")
-                elif user_change > 0:
-                    print(f"Here is ${user_change : .2f} in change.")
                 else:
+                    resources["money"] += user_paid
+                    resources["money"] -= user_change
+                    if user_change > 0:
+                        print(f"Here is ${user_change : .2f} in change.")
                     print(f"Your {user_drink} ☕️. Enjoy!")
-                    for item in resources:
-                        if not item == "money":
-                            resources[item] -= choice["ingredients"][item]
+                    for item in choice["ingredients"]:
+                        resources[item] -= choice["ingredients"][item]
             else:
                 go = False
                 print("Out of order")
